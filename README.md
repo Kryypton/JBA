@@ -1,10 +1,8 @@
-# Chasse au Monstre
+# JBA - JAVA Battle.net API
 
 ## Présentation du Projet
 
-"Chasse au Monstre" est un jeu interactif développé en Java où l'on trouve deux protagonistes : un monstre et un chasseur. Le jeu se déroule sur une grille où le monstre se déplace de manière cachée tandis que le chasseur tente de le localiser en tirant sur différentes cases. L'objectif pour le chasseur est de toucher le monstre avant que ce dernier ne s'échappe ou ne le capture.
-
-## Membres de l'Équipe
+JBA - JAVA Battle.net API est une API JAVA permettant de récupérer des informations sur les jeux de Blizzard. Elle est basée sur l'API REST de Blizzard, et permet de récupérer des informations sur les jeux de Blizzard, comme World of Warcraft, Diablo 3, Starcraft 2, Hearthstone, Heroes of the Storm et Overwatch. Pour l'instant elle ne permet que de récupérer son token mais des mises à jour sont prévues.
 
 ## Technologies Utilisées
 
@@ -12,10 +10,12 @@
 - Maven: Outil de gestion et d'automatisation de projet.
 - JUnit: Cadre de test pour des tests unitaires rigoureux. (non apparent dans le dépôt
 
-## Lancement du Jeu
+## Utilisation de la librairie
 
-Pour lancer le jeu, assurez-vous que Maven est installé et configuré sur votre machine. Clonez ensuite le dépôt et exécutez la commande suivante à la racine du projet :
-
+Exemple pour la récupération du Token d'accès :
 ```
-./run.sh
+    public static void main(String[] args) {
+        JBA jba = JBABuilderOAuth.createOAuthAccess("clientid", "clientSecret", JBAServerLocales.FR).build();
+        System.out.println(jba.getAccessToken());
+    }
 ```
