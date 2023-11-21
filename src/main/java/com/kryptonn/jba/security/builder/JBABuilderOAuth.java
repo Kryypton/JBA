@@ -1,7 +1,7 @@
-package com.kryptonn.jba.builder;
+package com.kryptonn.jba.security.builder;
 
-import com.kryptonn.jba.client.JBA;
-import com.kryptonn.jba.client.JBAServerLocales;
+import com.kryptonn.jba.security.client.JBA;
+import com.kryptonn.jba.security.client.JBAServerLocales;
 
 /**
  * @author Kryptonn

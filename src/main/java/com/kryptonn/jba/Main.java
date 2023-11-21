@@ -1,8 +1,9 @@
 package com.kryptonn.jba;
 
-import com.kryptonn.jba.builder.JBABuilderOAuth;
-import com.kryptonn.jba.client.JBA;
-import com.kryptonn.jba.client.JBAServerLocales;
+import com.kryptonn.jba.security.client.JBA;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 /**
  * @author Kryptonn
@@ -13,13 +14,15 @@ import com.kryptonn.jba.client.JBAServerLocales;
  *    This example shows how to get an access token using the OAuth authentication.
  * </p>
  */
+@SpringBootApplication
 public class Main {
-    /**
-     * Main method.
-     * @param args Command line arguments.
-     */
+
     public static void main(String[] args) {
-        JBA jba = JBABuilderOAuth.createOAuthAccess("clientid", "clientSecret", JBAServerLocales.FR).build();
-        System.out.println(jba.getAccessToken());
+        ApplicationContext context = SpringApplication.run(Main.class, args);
+        JBA jba = context.getBean(JBA.class);
+
+        String token = jba.getAccessToken();
+        System.out.println("Access Token: " + token);
     }
 }
+

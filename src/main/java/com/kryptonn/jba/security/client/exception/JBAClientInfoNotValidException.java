@@ -1,4 +1,4 @@
-package com.kryptonn.jba.exception;
+package com.kryptonn.jba.security.client.exception;
 
 /**
  * Thrown to indicate that the client ID or the client secret is not valid.

@@ -1,4 +1,4 @@
-package com.kryptonn.jba.client;
+package com.kryptonn.jba.security.client;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,9 +21,12 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kryptonn.jba.exception.JBAClientInfoNotValidException;
+import com.kryptonn.jba.security.client.exception.JBAClientInfoNotValidException;
 
 /**
  * @author Kryptonn
@@ -39,11 +42,17 @@ import com.kryptonn.jba.exception.JBAClientInfoNotValidException;
  * }</pre>
  * @see com.kryptonn.jba.builder.JBABuilderOAuth
  */
+@Component
 public class JBA {
+    @Value("${battle.net.clientId}")
+    private String clientId;
+
+    @Value("${battle.net.clientSecret}")
+    private String clientSecret;
+
     private TokenResponse tokenResponse;
     private Instant expiresAt;
-    private final String clientId;
-    private final String clientSecret;
+
     private final JBAServerLocales region;
     private final CloseableHttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -53,7 +62,9 @@ public class JBA {
      * @param clientId     The client ID provided by Battle.net for OAuth authentication.
      * @param clientSecret The client secret provided by Battle.net for OAuth authentication.
      */
-    public JBA(String clientId, String clientSecret, JBAServerLocales region) {
+    public JBA(@Value("${battle.net.clientId}") String clientId,
+               @Value("${battle.net.clientSecret}") String clientSecret,
+               @Value("${battle.net.region}") JBAServerLocales region) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.region = region;
@@ -77,6 +88,7 @@ public class JBA {
      * @throws JBAClientInfoNotValidException If the provided client credentials are not valid.
      * @throws IOException If there is a problem with the network connection or server.
      */
+    @Scheduled(fixedDelayString = "${battle.net.tokenRefreshRate}")
     private void refreshToken() throws JBAClientInfoNotValidException, IOException, URISyntaxException {
         CredentialsProvider provider = new BasicCredentialsProvider();
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(this.clientId, this.clientSecret);
@@ -100,7 +112,7 @@ public class JBA {
 
         HttpResponse response = httpClient.execute(httpPost, context);
         int statusCode = response.getStatusLine().getStatusCode();
-
+        System.out.println("Status Code: " + statusCode);
         if (statusCode == 200) {
             String responseBody = EntityUtils.toString(response.getEntity());
             this.tokenResponse = objectMapper.readValue(responseBody, TokenResponse.class);

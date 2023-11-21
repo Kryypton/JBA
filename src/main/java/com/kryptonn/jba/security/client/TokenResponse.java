@@ -1,4 +1,4 @@
-package com.kryptonn.jba.client;
+package com.kryptonn.jba.security.client;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
