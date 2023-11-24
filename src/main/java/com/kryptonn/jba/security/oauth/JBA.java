@@ -1,4 +1,4 @@
-package com.kryptonn.jba.security.client;
+package com.kryptonn.jba.security.oauth;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,12 +21,21 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kryptonn.jba.security.client.exception.JBAClientInfoNotValidException;
+
+import com.kryptonn.jba.config.JBAServerLocales;
+import com.kryptonn.jba.exception.oauth.JBAClientInfoNotValidException;
+import com.kryptonn.jba.model.oauth.TokenResponse;
+
+import jakarta.annotation.PostConstruct;
 
 /**
  * @author Kryptonn
@@ -40,14 +49,14 @@ import com.kryptonn.jba.security.client.exception.JBAClientInfoNotValidException
  * JBA jba = JBABuilderOAuth.createOAuthAccess("clientId", "clientSecret").build();
  * String accessToken = jba.getAccessToken();
  * }</pre>
- * @see com.kryptonn.jba.builder.JBABuilderOAuth
+ * @see com.kryptonn.jba.builder.JBABuilderOAuth for manual creation of a JBA object.
  */
 @Component
 public class JBA {
-    @Value("${battle.net.clientId}")
+    @Value("${battle.net.client-id}")
     private String clientId;
 
-    @Value("${battle.net.clientSecret}")
+    @Value("${battle.net.client-secret}")
     private String clientSecret;
 
     private TokenResponse tokenResponse;
@@ -57,28 +66,29 @@ public class JBA {
     private final CloseableHttpClient httpClient;
     private final ObjectMapper objectMapper;
 
+    private static final Logger logger = LoggerFactory.getLogger(JBA.class);
+
     /**
      * Constructs a JBA instance with the provided client credentials.
      * @param clientId     The client ID provided by Battle.net for OAuth authentication.
      * @param clientSecret The client secret provided by Battle.net for OAuth authentication.
      */
-    public JBA(@Value("${battle.net.clientId}") String clientId,
-               @Value("${battle.net.clientSecret}") String clientSecret,
+    public JBA(@Value("${battle.net.client-id}") String clientId,
+               @Value("${battle.net.client-secret}") String clientSecret,
                @Value("${battle.net.region}") JBAServerLocales region) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.region = region;
         this.httpClient = HttpClients.createDefault();
         this.objectMapper = new ObjectMapper();
+    }
 
+    @PostConstruct
+    private void init() {
         try {
             refreshToken();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JBAClientInfoNotValidException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        } catch (IOException | JBAClientInfoNotValidException | URISyntaxException e) {
+            logger.error("[JBA] Error during initial token refresh", e);
         }
     }
 
@@ -88,7 +98,7 @@ public class JBA {
      * @throws JBAClientInfoNotValidException If the provided client credentials are not valid.
      * @throws IOException If there is a problem with the network connection or server.
      */
-    @Scheduled(fixedDelayString = "${battle.net.tokenRefreshRate}")
+    @Scheduled(fixedDelayString = "${battle.net.token-refresh-rate}")
     private void refreshToken() throws JBAClientInfoNotValidException, IOException, URISyntaxException {
         CredentialsProvider provider = new BasicCredentialsProvider();
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(this.clientId, this.clientSecret);
@@ -112,32 +122,14 @@ public class JBA {
 
         HttpResponse response = httpClient.execute(httpPost, context);
         int statusCode = response.getStatusLine().getStatusCode();
-        System.out.println("Status Code: " + statusCode);
         if (statusCode == 200) {
             String responseBody = EntityUtils.toString(response.getEntity());
             this.tokenResponse = objectMapper.readValue(responseBody, TokenResponse.class);
             this.expiresAt = Instant.now().plusSeconds(tokenResponse.getExpiresIn() - 300);
+            logger.info("[JBA] Token refreshed successfully");
         } else {
+            logger.error("[JBA] Token refresh failed with status code " + statusCode);
             throw new JBAClientInfoNotValidException("Client ID or Client Secret is not valid");
-        }
-    }
-
-    /**
-     * Checks if the current access token has expired and refreshes it if necessary.
-     * This method is synchronized to prevent multiple threads from trying to refresh
-     * the token simultaneously.
-     */
-    private synchronized void checkExpiration() {
-        if (Instant.now().isAfter(expiresAt)) {
-            try {
-                refreshToken();
-            } catch (JBAClientInfoNotValidException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -147,7 +139,6 @@ public class JBA {
      * @return The current valid access token.
      */
     public String getAccessToken() {
-        checkExpiration();
         return this.tokenResponse.getAccessToken();
     }
 
@@ -179,7 +170,7 @@ public class JBA {
     /**
      * Returns the current region.
      * @return The current region.
-     * @see com.kryptonn.jba.client.JBAServerLocales
+     * @see com.kryptonn.jba.config.client.JBAServerLocales
      */
     public JBAServerLocales getRegion() {
         return region;
@@ -188,10 +179,9 @@ public class JBA {
     /**
      * Returns the current token response. If the token has expired, it triggers a refresh.
      * @return The current valid token response.
-     * @see com.kryptonn.jba.client.TokenResponse
+     * @see com.kryptonn.jba.model.oauth.client.TokenResponse
      */
     public TokenResponse getTokenResponse() {
-        checkExpiration();
         return tokenResponse;
     }
 

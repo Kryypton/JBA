@@ -1,0 +1,17 @@
+{"properties": [{
+  "name": "battle.net.region",
+  "type": "java.lang.String",
+  "description": "A description for 'battle.net.region'"
+}, {
+    "name": "battle.net.client-secret",
+    "type": "java.lang.String",
+    "description": "A description for 'battle.net.clientSecret'"
+}, {
+    "name": "battle.net.client-id",
+    "type": "java.lang.String",
+    "description": "A description for 'battle.net.clientId'"
+}, {
+    "name": "battle.net.token-refresh-rate",
+    "type": "java.lang.String",
+    "description": "A description for 'battle.net.tokenRefreshRate'"
+}]}

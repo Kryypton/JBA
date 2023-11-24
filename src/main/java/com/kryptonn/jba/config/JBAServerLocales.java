@@ -1,4 +1,4 @@
-package com.kryptonn.jba.security.client;
+package com.kryptonn.jba.config;
 
 /**
  * @author Kryptonn

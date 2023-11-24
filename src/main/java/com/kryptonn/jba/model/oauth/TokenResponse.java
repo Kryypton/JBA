@@ -1,4 +1,4 @@
-package com.kryptonn.jba.security.client;
+package com.kryptonn.jba.model.oauth;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,7 +15,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * </p>
  */
 public class TokenResponse {
-
 
     @JsonProperty("access_token")
     private String accessToken;

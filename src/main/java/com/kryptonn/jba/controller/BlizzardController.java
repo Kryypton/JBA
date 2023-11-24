@@ -1,13 +1,12 @@
 package com.kryptonn.jba.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kryptonn.jba.security.client.JBA;
+import com.kryptonn.jba.security.oauth.JBA;
 
 @RestController
 public class BlizzardController {
-    @Autowired
+    //@Autowired
     public BlizzardController(JBA jba) {
     }
 }

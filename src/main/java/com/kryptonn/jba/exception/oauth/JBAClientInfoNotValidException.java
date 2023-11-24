@@ -1,4 +1,4 @@
-package com.kryptonn.jba.security.client.exception;
+package com.kryptonn.jba.exception.oauth;
 
 /**
  * Thrown to indicate that the client ID or the client secret is not valid.
@@ -6,7 +6,7 @@ package com.kryptonn.jba.security.client.exception;
  *    The client ID and the client secret are provided by Blizzard when you register your application.
  * </p>
  * @see com.kryptonn.jba.builder.JBABuilderOAuth
- * @see com.kryptonn.jba.client.JBA
+ * @see com.kryptonn.jba.security.oauth.client.JBA
  */
 public class JBAClientInfoNotValidException extends Exception {
 
