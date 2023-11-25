@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 import com.kryptonn.jba.config.JBAServerLocales;
-import com.kryptonn.jba.model.data.wow.AchievementCategoryIndex;
+import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementMedia;
 import com.kryptonn.jba.service.data.wow.AchievementService;
 
 /**
@@ -41,8 +41,8 @@ public class Main {
     public CommandLineRunner run(AchievementService achievementService) {
         return args -> {
             long start = System.currentTimeMillis();
-            AchievementCategoryIndex index = achievementService.getAchievementCategoryIndex();
-            System.out.println(index);
+            AchievementMedia index = achievementService.getAchievementMedia(6);
+            System.out.println(index.assets().get(0).key());
             long end = System.currentTimeMillis();
             System.out.println("Time: " + (end - start) + "ms");
         };

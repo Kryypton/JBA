@@ -1,6 +1,7 @@
 package com.kryptonn.jba.controller.data.wow;
 
-import com.kryptonn.jba.model.data.wow.AchievementCategoryIndex;
+import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementCategoryID;
+import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementCategoryIndex;
 import com.kryptonn.jba.service.data.wow.AchievementService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,5 +19,10 @@ public class AchievementController {
     @GetMapping("/categories")
     public AchievementCategoryIndex getAchievementCategoryIndex() {
         return achievementService.getAchievementCategoryIndex();
+    }
+
+    @GetMapping("/categories/{id}")
+    public AchievementCategoryID getAchievementCategoryID(Integer id) {
+        return achievementService.getAchievementCategoryID(id);
     }
 }
