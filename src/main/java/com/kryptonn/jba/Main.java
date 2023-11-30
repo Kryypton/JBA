@@ -8,8 +8,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 
 import com.kryptonn.jba.config.JBAServerLocales;
-import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementMedia;
 import com.kryptonn.jba.service.data.wow.AchievementService;
+import com.kryptonn.jba.service.data.wow.AuctionHouseService;
+import com.kryptonn.jba.service.data.wow.AzeritEssenceService;
+import com.kryptonn.jba.service.data.wow.CovenantService;
+import com.kryptonn.jba.service.data.wow.CreatureService;
+import com.kryptonn.jba.service.data.wow.RealmService;
 
 /**
  * @author Kryptonn
@@ -38,11 +42,48 @@ public class Main {
     }
 
     @Bean
-    public CommandLineRunner run(AchievementService achievementService) {
+    public CommandLineRunner run(AchievementService achievementService, AuctionHouseService auctionHouseService, CreatureService creatureService, RealmService realmService, AzeritEssenceService azeritEssenceService, CovenantService covenantService) {
         return args -> {
             long start = System.currentTimeMillis();
-            AchievementMedia index = achievementService.getAchievementMedia(6);
-            System.out.println(index.assets().get(0).key());
+            System.out.println(achievementService.getAchievementCategoryIndex());
+            System.out.println("\n + \n");
+            System.out.println(achievementService.getAchievementCategoryID(81));
+            System.out.println("\n + \n");
+            System.out.println(achievementService.getAchievementMedia(6));
+            System.out.println("\n + \n");
+            System.out.println("\n + \n");
+            System.out.println(creatureService.getCreatureFamilliesIndex());
+            System.out.println("\n + \n");
+            System.out.println(creatureService.getCreatureFamily(1));
+            System.out.println("\n + \n");
+            System.out.println(creatureService.getCreatureTypesIndex());
+            System.out.println("\n + \n");
+            System.out.println(creatureService.getCreatureType(1));
+            System.out.println("\n + \n");
+            System.out.println(creatureService.getCreature(42722));
+            System.out.println("\n + \n");
+            System.out.println(creatureService.getCreatureFamilyMedia(1));
+            System.out.println("\n + \n");
+            System.out.println(creatureService.getCreatureDisplayMedia(30221));
+            System.out.println("\n + \n");
+            System.out.println(realmService.getRealmIndex());
+            System.out.println("\n + \n");
+            System.out.println(realmService.getRealmID(526));
+            System.out.println("\n + \n");
+            System.out.println(covenantService.getCovenantIndex());
+            System.out.println("\n + \n");
+            System.out.println(covenantService.getCovenant(1));
+            System.out.println("\n + \n");
+            System.out.println(covenantService.getCovenantMedia(1));
+            System.out.println("\n + \n");
+            System.out.println(covenantService.getSoulbindConduitIndex());
+            System.out.println("\n + \n");
+            System.out.println(covenantService.getSoulbindConduit(1));
+            System.out.println("\n + \n");
+            System.out.println(covenantService.getSoulbindIndex());
+            System.out.println("\n + \n");
+            System.out.println(covenantService.getSoulbind(1));
+            System.out.println("\n + \n");
             long end = System.currentTimeMillis();
             System.out.println("Time: " + (end - start) + "ms");
         };

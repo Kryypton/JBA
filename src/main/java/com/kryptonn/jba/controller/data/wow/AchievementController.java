@@ -1,5 +1,6 @@
 package com.kryptonn.jba.controller.data.wow;
 
+import com.kryptonn.jba.client.ApiResponse;
 import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementCategoryID;
 import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementCategoryIndex;
 import com.kryptonn.jba.service.data.wow.AchievementService;
@@ -17,12 +18,22 @@ public class AchievementController {
     }
 
     @GetMapping("/categories")
-    public AchievementCategoryIndex getAchievementCategoryIndex() {
-        return achievementService.getAchievementCategoryIndex();
+    public Object getAchievementCategoryIndex() {
+        ApiResponse<AchievementCategoryIndex> r = achievementService.getAchievementCategoryIndex();
+        try {
+            return r.getData();
+        } catch (Exception e) {
+            return r.getError();
+        }
     }
 
     @GetMapping("/categories/{id}")
-    public AchievementCategoryID getAchievementCategoryID(Integer id) {
-        return achievementService.getAchievementCategoryID(id);
+    public Object getAchievementCategoryID(Integer id) {
+        ApiResponse<AchievementCategoryID> r = achievementService.getAchievementCategoryID(id);
+        try {
+            return r.getData();
+        } catch (Exception e) {
+            return r.getError();
+        }
     }
 }

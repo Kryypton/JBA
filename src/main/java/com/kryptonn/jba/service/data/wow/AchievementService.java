@@ -1,5 +1,6 @@
 package com.kryptonn.jba.service.data.wow;
 
+import com.kryptonn.jba.client.ApiResponse;
 import com.kryptonn.jba.client.BlizzardApiClient;
 import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementCategoryID;
 import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementCategoryIndex;
@@ -10,30 +11,30 @@ import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementMedia;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AchievementService {
+public class AchievementService  {
     private final BlizzardApiClient blizzardApiClient;
 
     public AchievementService(BlizzardApiClient blizzardApiClient) {
         this.blizzardApiClient = blizzardApiClient;
     }
 
-    public AchievementCategoryIndex getAchievementCategoryIndex() {
+    public ApiResponse<AchievementCategoryIndex> getAchievementCategoryIndex() {
         return blizzardApiClient.getAchievementCategoryIndex();
     }
 
-    public AchievementCategoryID getAchievementCategoryID(Integer id) {
+    public ApiResponse<AchievementCategoryID> getAchievementCategoryID(Integer id) {
         return blizzardApiClient.getAchievementCategoryID(id);
     }
 
-    public AchievementIndex getAchievementIndex() {
+    public ApiResponse<AchievementIndex> getAchievementIndex() {
         return blizzardApiClient.getAchievementIndex();
     }
 
-    public AchievementID getAchievementID(Integer id) {
+    public ApiResponse<AchievementID> getAchievementID(Integer id) {
         return blizzardApiClient.getAchievementID(id);
     }
 
-    public AchievementMedia getAchievementMedia(Integer id) {
+    public ApiResponse<AchievementMedia> getAchievementMedia(Integer id) {
         return blizzardApiClient.getAchievementMedia(id);
     }
 }
