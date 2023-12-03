@@ -4,6 +4,7 @@ import com.kryptonn.jba.config.JBAServerLocales;
 import com.kryptonn.jba.model.BlizzardWebApiError;
 import com.kryptonn.jba.model.base.KeyNameIdSlug;
 import com.kryptonn.jba.model.base.LinksAssetsID;
+import com.kryptonn.jba.model.data.wow.HeirloomAPI.HeirloomIndex;
 import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementCategoryID;
 import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementCategoryIndex;
 import com.kryptonn.jba.model.data.wow.achievementAPI.AchievementID;
@@ -23,6 +24,7 @@ import com.kryptonn.jba.model.data.wow.creatureAPI.CreatureFamilliesIndex;
 import com.kryptonn.jba.model.data.wow.creatureAPI.CreatureFamily;
 import com.kryptonn.jba.model.data.wow.creatureAPI.CreatureType;
 import com.kryptonn.jba.model.data.wow.creatureAPI.CreatureTypesIndex;
+import com.kryptonn.jba.model.data.wow.guildCrestAPI.GuildCrestComponentsIndex;
 import com.kryptonn.jba.model.data.wow.realmAPI.RealmIndex;
 import com.kryptonn.jba.security.oauth.JBA;
 
@@ -717,6 +719,111 @@ public class BlizzardApiClient {
         } catch (HttpClientErrorException e) {
             logger.error("An BizzardWebApiError object was returned");
             response.setError(restTemplate.getForObject(e.getResponseBodyAsString(),BlizzardWebApiError.class));
+        } catch (RestClientException e) {
+            logger.error("Failed to fetch CreatureFamilyMedia", e);
+            return null;
+        }
+
+        return response;
+    }
+
+    public ApiResponse<GuildCrestComponentsIndex> getGuildCrestComponentsIndex() {
+        ApiResponse<GuildCrestComponentsIndex> response = new ApiResponse<>();
+
+        String url = String.format("%s/data/wow/media/guild-crest/index?namespace=%s&locale=%s&access_token=%s",
+                jbaServerLocales.getHost(),
+                jbaServerLocales.getStaticNamespace(),
+                jbaServerLocales.getLocale(),
+                jba.getAccessToken());
+
+        logger.info("url " + url);
+
+        try {
+            response.setData(restTemplate.getForObject(url, GuildCrestComponentsIndex.class));
+            response.setSuccess();
+        } catch (HttpClientErrorException e) {
+            logger.error("An BizzardWebApiError object was returned");
+            response.setError(restTemplate.getForObject(e.getResponseBodyAsString(),BlizzardWebApiError.class));
+        } catch (RestClientException e) {
+            logger.error("Failed to fetch CreatureFamilyMedia", e);
+            return null;
+        }
+
+        return response;
+    }
+
+    public ApiResponse<LinksAssetsID> getGuildCrestBorderMedia(Integer id) {
+        ApiResponse<LinksAssetsID> response = new ApiResponse<>();
+
+        String url = String.format("%s/data/wow/media/guild-crest/border/%d?namespace=%s&locale=%s&access_token=%s",
+                jbaServerLocales.getHost(),
+                id,
+                jbaServerLocales.getStaticNamespace(),
+                jbaServerLocales.getLocale(),
+                jba.getAccessToken());
+
+        logger.info("url " + url);
+
+        try {
+            response.setData(restTemplate.getForObject(url, LinksAssetsID.class));
+            response.setSuccess();
+        } catch (HttpClientErrorException e) {
+            logger.error("An BizzardWebApiError object was returned");
+            response.setError(restTemplate.getForObject(e.getResponseBodyAsString(),
+                    BlizzardWebApiError.class));
+        } catch (RestClientException e) {
+            logger.error("Failed to fetch CreatureFamilyMedia", e);
+            return null;
+        }
+
+        return response;
+    }
+
+    public ApiResponse<LinksAssetsID> getGuildCrestEmblemMedia(Integer id) {
+        ApiResponse<LinksAssetsID> response = new ApiResponse<>();
+
+        String url = String.format("%s/data/wow/media/guild-crest/emblem/%d?namespace=%s&locale=%s&access_token=%s",
+                jbaServerLocales.getHost(),
+                id,
+                jbaServerLocales.getStaticNamespace(),
+                jbaServerLocales.getLocale(),
+                jba.getAccessToken());
+
+        logger.info("url " + url);
+
+        try {
+            response.setData(restTemplate.getForObject(url, LinksAssetsID.class));
+            response.setSuccess();
+        } catch (HttpClientErrorException e) {
+            logger.error("An BizzardWebApiError object was returned");
+            response.setError(
+                    restTemplate.getForObject(e.getResponseBodyAsString(), BlizzardWebApiError.class));
+        } catch (RestClientException e) {
+            logger.error("Failed to fetch CreatureFamilyMedia", e);
+            return null;
+        }
+
+        return response;
+    }
+
+    public ApiResponse<HeirloomIndex> getHeirloomIndex() {
+        ApiResponse<HeirloomIndex> response = new ApiResponse<>();
+
+        String url = String.format("%s/data/wow/hairloom/index?namespace=%s&locale=%s&access_token=%s",
+                jbaServerLocales.getHost(),
+                jbaServerLocales.getStaticNamespace(),
+                jbaServerLocales.getLocale(),
+                jba.getAccessToken());
+
+        logger.info("url " + url);
+
+        try {
+            response.setData(restTemplate.getForObject(url, HeirloomIndex.class));
+            response.setSuccess();
+        } catch (HttpClientErrorException e) {
+            logger.error("An BizzardWebApiError object was returned");
+            response
+                    .setError(restTemplate.getForObject(e.getResponseBodyAsString(), BlizzardWebApiError.class));
         } catch (RestClientException e) {
             logger.error("Failed to fetch CreatureFamilyMedia", e);
             return null;
