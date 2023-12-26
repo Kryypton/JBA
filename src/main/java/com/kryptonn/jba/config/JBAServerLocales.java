@@ -4,7 +4,7 @@ package com.kryptonn.jba.config;
  * @author Kryptonn
  * @version 1.0.1
  * @since 1.0.0
- * JBAServerLocales is an enum that contains all the available locales for the Battle.net API.
+ * JBAServerLocales is an fdsgfsdgdsqgdqs that contains all the available locales for the Battle.net API.
  * <p>
  * The locales are used to determine the language of the data returned by the API.
  * </p>
@@ -13,67 +13,66 @@ public enum JBAServerLocales {
     /**
      * North America / United States
      */
-    US("North America","us.api.blizzard.com", "oauth.battle.net","en_US", "static-us", "dynamic-us"),
+    US("North America","us.api.blizzard.com", "oauth.battle.net","en_US", "us"),
     /**
      * North America / Mexico
      */
-    MX("North America","us.api.blizzard.com", "oauth.battle.net","es_MX", "static-us", "dynamic-us"),
+    MX("North America","us.api.blizzard.com", "oauth.battle.net","es_MX", "us"),
     /**
      * North America / Brazil
      */
-    BR("North America","us.api.blizzard.com", "oauth.battle.net","pt_BR", "static-us", "dynamic-us"),
+    BR("North America","us.api.blizzard.com", "oauth.battle.net","pt_BR", "us"),
 
     /**
      * Europe / United Kingdom
      */
-    GB("Europe","eu.api.blizzard.com", "oauth.battle.net","en_GB", "static-eu", "dynamic-eu"),
+    GB("Europe","eu.api.blizzard.com", "oauth.battle.net","en_GB", "eu"),
     /**
      * Europe / Spain
      */
-    ES("Europe","eu.api.blizzard.com", "oauth.battle.net","es_ES", "static-eu", "dynamic-eu"),
+    ES("Europe","eu.api.blizzard.com", "oauth.battle.net","es_ES", "eu"),
     /**
      * Europe / France
      */
-    FR("Europe","eu.api.blizzard.com", "oauth.battle.net","fr_FR", "static-eu", "dynamic-eu"),
+    FR("Europe","eu.api.blizzard.com", "oauth.battle.net","fr_FR", "eu"),
     /**
      * Europe / Russia
      */
-    RU("Europe","eu.api.blizzard.com", "oauth.battle.net","ru_RU", "static-eu", "dynamic-eu"),
+    RU("Europe","eu.api.blizzard.com", "oauth.battle.net","ru_RU", "eu"),
     /**
      * Europe / Germany
      */
-    DE("Europe","eu.api.blizzard.com", "oauth.battle.net","de_DE", "static-eu", "dynamic-eu"),
+    DE("Europe","eu.api.blizzard.com", "oauth.battle.net","de_DE", "eu"),
     /**
      * Europe / Portugal
      */
-    PT("Europe","eu.api.blizzard.com", "oauth.battle.net","pt_PT", "static-eu", "dynamic-eu"),
+    PT("Europe","eu.api.blizzard.com", "oauth.battle.net","pt_PT", "eu"),
     /**
      * Europe / Italy
      */
-    IT("Europe","eu.api.blizzard.com", "oauth.battle.net","it_IT", "static-eu", "dynamic-eu"),
+    IT("Europe","eu.api.blizzard.com", "oauth.battle.net","it_IT", "eu"),
 
     /**
      * China
      */
-    KR("Korea","kr.api.blizzard.com", "oauth.battle.net","ko_KR", "static-kr", "dynamic-kr"),
+    KR("Korea","kr.api.blizzard.com", "oauth.battle.net","ko_KR", "kr"),
 
     /**
      * Taiwan
      */
-    TW("Taiwan","tw.api.blizzard.com", "oauth.battle.net","zh_TW", "static-tw", "dynamic-tw"),
+    TW("Taiwan","tw.api.blizzard.com", "oauth.battle.net","zh_TW", "tw"),
 
     /**
      * Southeast Asia / Singapore
      */
-    CN("China","gateway.battlenet.com.cn","oauth.battlenet.com.cn", "zh_CN", "static-cn", "dynamic-cn");
+    CN("China","gateway.battlenet.com.cn","oauth.battlenet.com.cn", "zh_CN", "cn");
 
 
     private final String region;
     private final String host;
     private final String oAuth;
     private final String locale;
-    private final String staticNamespace;
-    private final String dynamicNamespace;
+    private final String namespace;
 
     /**
      * Constructs a JBAServerLocales instance with the provided region, host, oAuth and locale.
@@ -82,13 +81,12 @@ public enum JBAServerLocales {
      * @param oAuth The oAuth of the JBAServerLocales instance.
      * @param locale The locale of the JBAServerLocales instance.
      */
-    JBAServerLocales(String region, String host, String oAuth, String locale, String staticNamespace, String dynamicNamespace) {
+    JBAServerLocales(String region, String host, String oAuth, String locale, String namespace) {
         this.region = region;
         this.host = host;
         this.oAuth = oAuth;
         this.locale = locale;
-        this.staticNamespace = staticNamespace;
-        this.dynamicNamespace = dynamicNamespace;
+        this.namespace = namespace;
     }
 
     /**
@@ -96,7 +94,7 @@ public enum JBAServerLocales {
      * @return the region of the JBAServerLocales instance.
      */
     public String getHost() {
-        return "https://" +host;
+        return "https://" + host;
     }
 
     /**
@@ -124,10 +122,14 @@ public enum JBAServerLocales {
     }
 
     public String getStaticNamespace() {
-        return staticNamespace;
+        return "static-" + namespace;
     }
 
     public String getDynamicNamespace() {
-        return dynamicNamespace;
+        return "dynamic-" + namespace;
+    }
+
+    public String getProfileNamespace() {
+        return "profile-" + namespace;
     }
 }

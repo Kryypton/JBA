@@ -1,41 +1,40 @@
 package com.kryptonn.jba.client;
 
-import com.kryptonn.jba.model.BlizzardWebApiError;
+import com.kryptonn.jba.model.BlizzardWebApiStatusCode;
 
 public class ApiResponse<T> {
     private T data;
-    private BlizzardWebApiError error;
+    private BlizzardWebApiStatusCode statusCode;
 
-    public ApiResponse() {
-    }
+    public ApiResponse() {}
 
     public ApiResponse(T data) {
         this.data = data;
     }
 
-    public ApiResponse(T data, BlizzardWebApiError error) {
+    public ApiResponse(T data, BlizzardWebApiStatusCode statusCode) {
         this.data = data;
-        this.error = error;
+        this.statusCode = statusCode;
     }
 
     public T getData() {
         return this.data;
     }
 
-    public BlizzardWebApiError getError() {
-        return this.error;
+    public BlizzardWebApiStatusCode getStatusCode() {
+        return this.statusCode;
     }
 
     public void setData(T data) {
         this.data = data;
     }
 
-    public void setError(BlizzardWebApiError error) {
-        this.error = error;
+    public void setError(BlizzardWebApiStatusCode statusCode) {
+        this.statusCode = statusCode;
     }
 
     public void setSuccess() {
-        this.error = new BlizzardWebApiError(200, "BLZWEBAPI00000200", "Success");
+        this.statusCode = new BlizzardWebApiStatusCode(200, "BLZWEBAPI00000200", "Success");
     }
 
     public String toString() {
