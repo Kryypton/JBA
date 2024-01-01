@@ -30,12 +30,15 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.kryptonn.jba.client.BlizzardApiClient;
 import com.kryptonn.jba.config.JBAServerLocales;
 import com.kryptonn.jba.exception.oauth.JBAClientInfoNotValidException;
 import com.kryptonn.jba.model.oauth.TokenResponse;
+import com.kryptonn.jba.service.data.wow.JBAService;
 
 import jakarta.annotation.PostConstruct;
+
+
 
 /**
  * @author Kryptonn
@@ -86,10 +89,15 @@ public class JBA {
     @PostConstruct
     private void init() {
         try {
+            logger.info("[JBA] Initializing JBA object");
             refreshToken();
         } catch (IOException | JBAClientInfoNotValidException | URISyntaxException e) {
             logger.error("[JBA] Error during initial token refresh", e);
         }
+    }
+
+    public JBAService getService() {
+        return new JBAService(new BlizzardApiClient(this));
     }
 
     /**
@@ -139,8 +147,27 @@ public class JBA {
      * @return The current valid access token.
      */
     public String getAccessToken() {
+        // Vérifie si tokenResponse est null
+        if (this.tokenResponse == null) {
+            // Gère le cas où tokenResponse est null. Par exemple, vous pouvez tenter de rafraîchir le token.
+            try {
+                refreshToken();
+            } catch (Exception e) {
+                // Gestion de l'erreur lors de la tentative de rafraîchissement du token
+                logger.error("[JBA] Erreur lors du rafraîchissement du token", e);
+                return null; // Ou gérer autrement selon la logique de votre application
+            }
+    
+            // Vérifie à nouveau si tokenResponse est toujours null après la tentative de rafraîchissement
+            if (this.tokenResponse == null) {
+                logger.error("[JBA] tokenResponse est toujours null après la tentative de rafraîchissement");
+                return null; // Ou gérer autrement selon la logique de votre application
+            }
+        }
+    
         return this.tokenResponse.getAccessToken();
     }
+    
 
     /**
      * Returns the client ID.

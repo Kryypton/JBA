@@ -1,6 +1,5 @@
 package com.kryptonn.jba.client;
 
-import com.kryptonn.jba.config.JBAServerLocales;
 import com.kryptonn.jba.model.data.wow.guild.GuildAPI.Guild;
 import com.kryptonn.jba.model.profile.user.wow.accountProfileAPI.accountProfileSummary.Character;
 import com.kryptonn.jba.model.profile.wow.character.characterProfileAPI.CharacterProfileSummary;
@@ -19,13 +18,10 @@ import org.springframework.web.client.RestTemplate;
 public class BlizzardApiClient {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(BlizzardApiClient.class);
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
     private JBA jba;
-    private final JBAServerLocales jbaServerLocales;
 
-    public BlizzardApiClient(RestTemplate restTemplate, JBA jba, JBAServerLocales jbaServerLocales){
-        this.restTemplate = restTemplate;
-        this.jbaServerLocales = jbaServerLocales;
+    public BlizzardApiClient(JBA jba){
         this.jba = jba;
     }
 
@@ -34,11 +30,11 @@ public class BlizzardApiClient {
         String url = "";
 
         url = String.format("%s/data/wow/guild/%s/%s?namespace=%s&locale=%s&access_token=%s",
-                jbaServerLocales.getHost(),
+                jba.getRegion().getHost(),
                 realmSlug.toLowerCase().replace(' ', '-'),
                 nameSlug.toLowerCase().replace(' ', '-'),
-                jbaServerLocales.getProfileNamespace(),
-                jbaServerLocales.getLocale(),
+                jba.getRegion().getProfileNamespace(),
+                jba.getRegion().getLocale(),
                 jba.getAccessToken()); 
 
         logger.info("trying to get guild with url : \'" + url + "\'");
@@ -59,7 +55,7 @@ public class BlizzardApiClient {
 
     public <T> ApiResponse<T> getRessource(String urlSource, Class<T> responseType) {
         ApiResponse<T> response = new ApiResponse<>();
-        String url = URLDecoder.decode(urlSource, StandardCharsets.UTF_8).concat("&locale=" + jbaServerLocales.getLocale() + "&access_token=" + jba.getAccessToken()) ;
+        String url = URLDecoder.decode(urlSource, StandardCharsets.UTF_8).concat("&locale=" + jba.getRegion().getLocale() + "&access_token=" + jba.getAccessToken()) ;
         
         logger.info("trying to get resource with url : " + url);
 
@@ -83,11 +79,11 @@ public class BlizzardApiClient {
         String url = "";
 
         url = String.format("%s/profile/wow/character/%s/%s?namespace=%s&locale=%s&access_token=%s",
-                jbaServerLocales.getHost(),
+                jba.getRegion().getHost(),
                 realmSlug.toLowerCase().replace(' ', '-'),
                 characterName.toLowerCase().replace(' ', '-'),
-                jbaServerLocales.getProfileNamespace(),
-                jbaServerLocales.getLocale(),
+                jba.getRegion().getProfileNamespace(),
+                jba.getRegion().getLocale(),
                 jba.getAccessToken()); 
 
         logger.info("trying to get character with url : \'" + url + "\'");
@@ -116,9 +112,9 @@ public class BlizzardApiClient {
         String url = "";
 
         url = String.format("%s/profile/user/wow?namespace=%s&locale=%s&access_token=%s",
-                jbaServerLocales.getHost(),
-                jbaServerLocales.getProfileNamespace(),
-                jbaServerLocales.getLocale(),
+                jba.getRegion().getHost(),
+                jba.getRegion().getProfileNamespace(),
+                jba.getRegion().getLocale(),
                 jba.getAccessToken()); 
 
         logger.info("trying to get account profile summary with url : \'" + url + "\'");
