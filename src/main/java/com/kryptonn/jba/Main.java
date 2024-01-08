@@ -1,15 +1,13 @@
 package com.kryptonn.jba;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.kryptonn.jba.model.data.wow.guild.GuildAPI.GuildRoster;
 import com.kryptonn.jba.model.data.wow.guild.GuildAPI.guildRoster.Character;
 import com.kryptonn.jba.security.oauth.builder.JBABuilderOAuth;
-import com.kryptonn.jba.client.BlizzardApiClient;
 import com.kryptonn.jba.config.JBAServerLocales;
 import com.kryptonn.jba.model.data.wow.guild.GuildAPI.Guild;
 import com.kryptonn.jba.service.data.wow.JBAService;
@@ -24,8 +22,13 @@ import com.kryptonn.jba.security.oauth.JBA;
  *    This example shows how to get an access token using the OAuth authentication.
  * </p>
  */
+@SpringBootApplication
 public class Main {
+    
+    @Autowired
+    private JBA jba;
     public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
             JBA jba = JBABuilderOAuth.createOAuthAccess("937e03d32a5b47a4b20035dd343ca591", "eLepPcWN1ixcEbEQPGVL1Krmj8AXRxn8", JBAServerLocales.FR).build();
             JBAService service = jba.getService();
             long start = System.currentTimeMillis();
@@ -36,12 +39,12 @@ public class Main {
             System.out.println(c.getName());
             long end = System.currentTimeMillis();
             System.out.println("Time: " + (end - start) + "ms");
+            
     }
 
-    public CommandLineRunner run() {
+    public CommandLineRunner run() throws Exception {
         return args -> {
-            JBA jba = JBABuilderOAuth.createOAuthAccess("937e03d32a5b47a4b20035dd343ca591", "eLepPcWN1ixcEbEQPGVL1Krmj8AXRxn8", JBAServerLocales.FR).build();
-            JBAService service = jba.getService();
+            JBAService service = this.jba.getService();
             long start = System.currentTimeMillis();
             Guild guild = service.getGuild("Hyjal", "Gardiens éternels").getData();
             System.out.println(guild.getName() + ": " + guild.getFaction().getName() + " - " + guild.getRealm().getName() + " - " + guild.getMemberCount());

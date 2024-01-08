@@ -62,6 +62,9 @@ public class JBA {
     @Value("${battle.net.client-secret}")
     private String clientSecret;
 
+    @Value("${battle.net.region}")
+    private String regionString;
+
     private TokenResponse tokenResponse;
     private Instant expiresAt;
 
